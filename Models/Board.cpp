@@ -15,8 +15,8 @@ Board::Board(int size, int bomb_chance) {
 			}
 
 			this->fields.insert(pair<string, Square>(
-					helpers::get_identifier(x, y + 1),
-					*new Square(is_bomb)
+				helpers::get_identifier(x, y + 1),
+				*new Square(is_bomb)
 			));
 		}
 	}
@@ -50,6 +50,7 @@ void Board::print_board(bool cheat = false) {
 
 void Board::hit_field(char x, int y) {
 	Square& square = fields.at(helpers::get_identifier(x, y));
+
 	if(square.get_is_bomb()) {
 		this->is_playing = false;
 		cout << "Boom! You lost!" << endl;
@@ -58,28 +59,27 @@ void Board::hit_field(char x, int y) {
 	int close_bombs = check_no_bombs(helpers::char_to_int(x), y);
 
 	square.set_close_bombs(close_bombs);
+	square.set_checked();
 }
 
 int Board::check_no_bombs(int x, int y) {
-	int x_array[] = { x - 1, x, x + 1 };
-	int y_array[] = { y - 1, y, y + 1 };
-
 	int no_bombs = 0;
-	for(int i = 0; i < 3; i++) {
-		if(x_array[i] < 0 || x_array[i] > board_size) continue;
 
-		for(int j = 0; j < 3; j++) {
-			if(y_array[j] < 1 || y_array[j] > board_size) continue;
+	for(int i = -1; i < 2; i++) {
+		if(x + i < 0 || x + i >= board_size) continue;
 
-			if(!(x_array[i] == x && y_array[j] == y)) {
-				cout << helpers::get_identifier(x_array[i], y_array[j]);
-				Square& square = fields.at(helpers::get_identifier(x_array[i], y_array[j]));
+		for(int j = -1; j < 2; j++) {
+			if(y + j < 1 || y + j >= board_size) continue;
+
+			if(!(i + i == x && y + j == y)) {
+				Square& square = fields.at(helpers::get_identifier(x + i, y + j));
+				
 				if(square.get_is_bomb()) {
 					no_bombs += 1;
 				} else if(!square.get_checked()) {
-					int number = check_no_bombs(x_array[i], y_array[j]);
-					square.set_close_bombs(number);
 					square.set_checked();
+					int number = check_no_bombs(x + i, y + j);
+					square.set_close_bombs(number);
 				}
 			}
 

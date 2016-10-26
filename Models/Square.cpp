@@ -39,7 +39,7 @@ char Square::get_identifier(bool cheat = false) {
 		}
 
 		if(this->is_checked) {
-			return (char) ('0' + no_bombs_around);
+			return (char) '0' + no_bombs_around;
 		}
 	}
 

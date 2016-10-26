@@ -42,7 +42,9 @@ int main() {
 		Board *board = new Board(board_size, bomb_chance);
 
 		while(board->is_playing) {
+			std::system("clear");
 			board->print_board(false);
+			
 			cout << "Please enter the location you want to check (prepend with '*' to flag): ";
 
 			string input;
